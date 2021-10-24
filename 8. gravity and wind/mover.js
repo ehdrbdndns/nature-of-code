@@ -1,19 +1,21 @@
 class Mover {
-    constructor(x, y) {
+    constructor(x, y, m) {
         this.pos = createVector(x, y);
         this.vel = createVector(0, 0);
         this.acc = createVector(0, 0);
-        this.r = 16;
+        this.mass = m;
+        this.r = sqrt(this.mass) * 10;
     }
 
     addForce(force) {
-        this.acc.add(force);
+        let f = p5.Vector.div(force, this.mass);
+        this.acc.add(f);
     }
 
     edges() {
         if(this.pos.y > height - this.r) {
             this.pos.y = height - this.r;
-            this.vel.y *= -1;
+            this.vel.y *= -0.999999;
         }
 
         if(this.pos.x > width - this.r) {
