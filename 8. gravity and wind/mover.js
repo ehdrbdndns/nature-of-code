@@ -7,6 +7,24 @@ class Mover {
         this.r = sqrt(this.mass) * 10;
     }
 
+    friction(mu) {
+        let diff = height - (this.pos.y + this.r);
+        if(diff < 1)  {
+
+            //Direction of Friction
+            let friction = this.vel.copy();
+            friction.normalize();
+            friction.mult(-1);
+
+            //Magnitude Of Friction
+            //let mu = 0.1; // surface의 종류에 따른 값 ex) ice, road
+            let normal = this.mass;
+            friction.setMag(mu * normal);
+
+            this.addForce(friction);
+        }
+    }
+
     addForce(force) {
         let f = p5.Vector.div(force, this.mass);
         this.acc.add(f);
@@ -15,7 +33,7 @@ class Mover {
     edges() {
         if(this.pos.y > height - this.r) {
             this.pos.y = height - this.r;
-            this.vel.y *= -0.999999;
+            this.vel.y *= -1;
         }
 
         if(this.pos.x > width - this.r) {
@@ -28,17 +46,14 @@ class Mover {
     }
 
     update() {
-        // let mouse = createVector(mouseX, mouseY);
-        // this.acc = p5.Vector.sub(mouse, this.pos);
-        // this.acc.setMag(1);
-        // this.vel.limit(5);
-        // print(this.vel)
         this.vel.add(this.acc);
         this.pos.add(this.vel);
         this.acc.set(0, 0);
     }
 
+
     show() {
+        // draw ball
         stroke(255);
         strokeWeight(2);
         fill(255, 100);
