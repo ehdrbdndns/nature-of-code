@@ -5,6 +5,13 @@ class Mover {
         this.acc = createVector(0, 0);
         this.mass = m;
         this.r = sqrt(this.mass) * 10;
+
+        this.gravityForce = createVector(0, 0);
+        this.velocityForce = createVector(0, 0);
+        this.frictionForce = createVector(0, 0);
+        this.gravityColor = color(255, 192, 203)
+        this.velocityColor = color(255, 203, 0);
+        this.frictionColor = color(74, 168, 216);
     }
 
     friction(mu) {
@@ -21,13 +28,14 @@ class Mover {
             let normal = this.mass;
             friction.setMag(mu * normal);
 
-            this.addForce(friction);
+            this.addForce(friction, "friction");
         }
     }
 
-    addForce(force) {
+    addForce(force, type) {
         let f = p5.Vector.div(force, this.mass);
         this.acc.add(f);
+        this.setArrow(f, type);
     }
 
     edges() {
@@ -51,6 +59,33 @@ class Mover {
         this.acc.set(0, 0);
     }
 
+    setArrow(force, type) {
+        // draw force arrow
+        if(type === "gravity") {
+            this.gravityForce = force.copy().setMag(this.r * 2);
+        } else if(type === "friction") {
+            this.frictionForce = force.copy().mult(300)
+        }
+
+        this.velocityForce = this.vel.copy().mult(this.r / 2);
+        this.startPos = this.pos;
+    }
+
+    drawArrow(endPos, color) {
+        let startPos = this.startPos;
+        // draw line
+        stroke(color)
+        line(startPos.x, startPos.y, endPos.x, endPos.y);
+
+        // draw angle
+        push()
+        translate(endPos.x, endPos.y);
+        let angle = atan2(endPos.y - startPos.y, endPos.x - startPos.x);
+        rotate(angle);
+        fill(color)
+        triangle(0, -2, 2, 0, 0, 2);
+        pop();
+    }
 
     show() {
         // draw ball
@@ -58,5 +93,14 @@ class Mover {
         strokeWeight(2);
         fill(255, 100);
         ellipse(this.pos.x, this.pos.y, this.r * 2);
+
+        // draw velocity arrow
+        this.drawArrow(this.pos.copy().add(this.velocityForce), this.velocityColor);
+
+        // draw gravity arrow
+        this.drawArrow(this.pos.copy().add(this.gravityForce), this.gravityColor);
+
+        // draw friction arrow
+        this.drawArrow(this.pos.copy().add(this.frictionForce), this.frictionColor);
     }
 }

@@ -13,14 +13,14 @@ function draw() {
 
     for(let mover of movers) {
         if (mouseIsPressed) {
-            let wind = createVector(0.1, 0);
+            let wind = createVector(0.8, 0);
             mover.addForce(wind);
         }
 
         let gravity = createVector(0, 0.2);
         let weight = p5.Vector.mult(gravity, mover.mass);
 
-        mover.addForce(weight);
+        mover.addForce(weight, "gravity");
         mover.friction(mu);
         mover.update();
         mover.edges();
