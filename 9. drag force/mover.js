@@ -15,7 +15,7 @@ class Mover {
         drag.mult(-1);
 
         let speedSq = this.vel.magSq();
-        c *= map(this.width, 10, 80, 1, 3);
+        c *= map(this.width, 10, 80, 0.1, 3);
         drag.setMag(c * speedSq);
 
         this.addForce(drag);
