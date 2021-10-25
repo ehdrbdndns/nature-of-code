@@ -1,10 +1,11 @@
 class Mover {
-    constructor(x, y, m) {
+    constructor(x, y, w, h, m) {
         this.pos = createVector(x, y);
+        this.width = w;
+        this.height = h;
         this.vel = createVector(0, 0);
         this.acc = createVector(0, 0);
         this.mass = m;
-        this.r = sqrt(this.mass) * 10;
     }
 
     drag(c) {
@@ -14,6 +15,7 @@ class Mover {
         drag.mult(-1);
 
         let speedSq = this.vel.magSq();
+        c *= map(this.width, 10, 80, 1, 3);
         drag.setMag(c * speedSq);
 
         this.addForce(drag);
@@ -25,16 +27,16 @@ class Mover {
     }
 
     edges() {
-        if (this.pos.y > height - this.r) {
-            this.pos.y = height - this.r;
+        if (this.pos.y > height - this.height) {
+            this.pos.y = height - this.height;
             this.vel.y *= -1;
         }
 
-        if (this.pos.x > width - this.r) {
-            this.pos.x = width - this.r;
+        if (this.pos.x > width - this.width) {
+            this.pos.x = width - this.width;
             this.vel.x *= -1;
         } else if (this.pos.x < 0) {
-            this.pos.x = this.r;
+            this.pos.x = this.width;
             this.vel.x *= -1;
         }
     }
@@ -50,6 +52,6 @@ class Mover {
         stroke(255);
         strokeWeight(2);
         fill(255, 100);
-        ellipse(this.pos.x, this.pos.y, this.r * 2);
+        rect(this.pos.x, this.pos.y, this.width, this.height);
     }
 }

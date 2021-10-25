@@ -5,7 +5,7 @@ let dragC = 0.3;
 function setup() {
     createCanvas(400, 400);
     for(let i = 0; i < 10; i++) {
-        movers[i] = new Mover(random(width), 0, random(1, 8));
+        movers[i] = new Mover(random(width), 0, random(10, 80), random(10, 80), 5);
     }
 }
 
