@@ -10,11 +10,10 @@ function setup() {
         movers[i] = new Mover(x, y, m);
     }
     attractor = new Attractor(width/2, height/2, 100);
-    background(0);
 }
 
 function draw() {
-    background(0, 5);
+    background(0);
     for(mover of movers) {
         mover.update();
         mover.show();
