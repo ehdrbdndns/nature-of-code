@@ -1,41 +1,45 @@
-let bob;
-let anchor;
-let restLength = 200;
+let particles = [];
+let springs = [];
+
 let k = 0.01;
-let velocity;
+let spacing = 50;
+
 let gravity;
 
 function setup() {
-    createCanvas(600, 400);
-    bob = createVector(350, 250);
-    anchor = createVector(300, 0);
-    velocity = createVector(0, 0);
-    gravity = createVector(0, 0.5);
+    createCanvas(400, 800);
+    for(let i = 0; i < 5; i++) {
+        particles[i] = new Particle( 200, i * spacing);
+        if(i !== 0) {
+            let a = particles[i];
+            let b = particles[i - 1];
+            let spring = new Spring(k, spacing, a, b);
+            springs.push(spring);
+        }
+    }
+    particles[0].locked = true;
+
+    gravity = createVector(0, 0.1);
 }
 
 function draw() {
     background(112, 50, 126);
-    noStroke();
-    stroke(255);
-    strokeWeight(4);
-    line(anchor.x, anchor.y, bob.x, bob.y);
-    fill(45, 197, 244);
-    circle(anchor.x, anchor.y, 32);
-    circle(bob.x, bob.y, 64);
 
-    if(mouseIsPressed) {
-        bob.x = mouseX;
-        bob.y = mouseY;
-        velocity.set(0, 0);
+    for(s of springs) {
+        s.update();
+        s.show();
     }
 
-    let force = p5.Vector.sub(bob, anchor);
-    let x = force.mag() - restLength;
-    force.normalize();
-    force.mult(-1 * k * x);
+    for(p of particles) {
+        p.applyForce(gravity);
+        p.update();
+        // p.show();
+    }
 
-    velocity.add(force);
-    velocity.add(gravity);
-    bob.add(velocity);
-    velocity.mult(0.99);
+    let tail = particles[particles.length - 1];
+
+    if(mouseIsPressed) {
+        tail.position.set(mouseX, mouseY);
+        tail.velocity.set(0, 0);
+    }
 }
